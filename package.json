@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/VendorDev/Vendor-Bot#readme",
   "dependencies": {
+    "chalk": "^4.1.1",
     "discord.js": "^12.5.3",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "moment": "^2.29.1"
   }
 }
