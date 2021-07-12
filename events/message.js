@@ -1,4 +1,56 @@
+const Discord = require('discord.js');
 module.exports = async (client, message) => {
+  const Filter = require('bad-words'),
+    filter = new Filter();
+
+  if (filter.isProfane(message.content) && !message.member.roles.cache.some((r) =>
+        ["Team", "Board", "Executive", "Development"].includes(r.name)
+      )) {
+    message.delete()
+    client.channels.cache.get(process.env.LOGS_CHANNEL_ID).send({ embed: {
+    color: 'FFFF00',
+    timestamp: new Date(),
+    title: "Smart Word Detection",
+    fields: [{
+        name: "User:",
+        value: `${message.author} (${message.author.id})`
+      },
+      {
+        name: "Message:",
+        value: message.content
+      },
+    ],
+
+  }
+})
+    message.author.send("Hey! Watch your language.")
+  }
+
+  if (message.content.toLowerCase().includes("discord.gg") || message.content.toLowerCase().includes("discord.com/invite")) {
+    if (!message.member.roles.cache.some((r) =>
+        ["Team", "Board", "Executive", "Development"].includes(r.name)
+      )) {
+    message.delete()
+    client.channels.cache.get(process.env.LOGS_CHANNEL_ID).send({ embed: {
+    color: 'FFFF00',
+    timestamp: new Date(),
+    title: "Smart Link Detection",
+    fields: [{
+        name: "User:",
+        value: `${message.author} (${message.author.id})`
+      },
+      {
+        name: "Message:",
+        value: message.content
+      },
+    ],
+
+  }
+})
+    message.author.send("Hey! Please don't advertise.")
+  }
+}
+
   if (
     !message.content.startsWith(process.env.PREFIX) ||
     message.author.bot ||
