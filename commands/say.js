@@ -2,7 +2,7 @@ module.exports = {
   name: "say",
   args: true,
   permissions: ["Team"],
-  usage: "[normal/embed] [your text/embed code]",
+  usage: "<normal/embed> <your text/embed code>",
   async execute(client, message, args) {
     if (args[0].toLowerCase() === "normal") {
       message.delete()
