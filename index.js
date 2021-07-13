@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const client = new Discord.Client();
 client.logger = require("./modules/Logger");
+client.utils = require("./modules/Utils");
 client.commands = new Discord.Collection();
 
 const commandFiles = fs
