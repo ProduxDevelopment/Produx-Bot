@@ -13,6 +13,7 @@ module.exports = {
       );
     await args.shift();
     client.utils.warn(client, user, args.join(" "), message.author);
+    message.delete();
     message.channel.send({
       embed: {
         color: "00ff00",
