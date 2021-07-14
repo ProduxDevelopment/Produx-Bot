@@ -4,6 +4,7 @@ module.exports = {
   args: true,
   permissions: ["Team"],
   usage: "<@user/user id>",
+  description: "View a user's infractions",
   async execute(client, message, args) {
     let user =
       message.mentions.users.first() || (await client.users.cache.get(args[0]));

@@ -3,6 +3,7 @@ module.exports = {
   args: true,
   permissions: ["Team"],
   usage: "<normal/embed> <your text/embed code>",
+  description: "Send a embed or normal message as the bot.",
   async execute(client, message, args) {
     if (args[0].toLowerCase() === "normal") {
       message.delete();

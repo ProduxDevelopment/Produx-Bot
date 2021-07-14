@@ -3,6 +3,7 @@ module.exports = {
   args: true,
   permissions: ["Team"],
   usage: "<@user/user id> [reason]",
+  description: "Warn a user.",
   async execute(client, message, args) {
     let user =
       message.mentions.users.first() ||
