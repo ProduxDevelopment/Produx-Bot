@@ -10,23 +10,25 @@ module.exports = async (client, message) => {
     )
   ) {
     message.delete();
-    client.channels.cache.get(process.env.LOGS_CHANNEL_ID).send({
-      embed: {
-        color: "ADD8E6",
-        timestamp: new Date(),
-        title: "Smart Word Detection",
-        fields: [
-          {
-            name: "User:",
-            value: `${message.author} (${message.author.id})`,
-          },
-          {
-            name: "Message:",
-            value: message.content,
-          },
-        ],
-      },
-    });
+    message.guild.channels.cache
+      .find((c) => c.name === "logs")
+      .send({
+        embed: {
+          color: "ADD8E6",
+          timestamp: new Date(),
+          title: "Smart Word Detection",
+          fields: [
+            {
+              name: "User:",
+              value: `${message.author} (${message.author.id})`,
+            },
+            {
+              name: "Message:",
+              value: message.content,
+            },
+          ],
+        },
+      });
     client.utils.warn(
       client,
       message.author,
@@ -45,23 +47,25 @@ module.exports = async (client, message) => {
       )
     ) {
       message.delete();
-      client.channels.cache.get(process.env.LOGS_CHANNEL_ID).send({
-        embed: {
-          color: "ADD8E6",
-          timestamp: new Date(),
-          title: "Smart Link Detection",
-          fields: [
-            {
-              name: "User:",
-              value: `${message.author} (${message.author.id})`,
-            },
-            {
-              name: "Message:",
-              value: message.content,
-            },
-          ],
-        },
-      });
+      message.guild.channels.cache
+        .find((c) => c.name === "logs")
+        .send({
+          embed: {
+            color: "ADD8E6",
+            timestamp: new Date(),
+            title: "Smart Link Detection",
+            fields: [
+              {
+                name: "User:",
+                value: `${message.author} (${message.author.id})`,
+              },
+              {
+                name: "Message:",
+                value: message.content,
+              },
+            ],
+          },
+        });
       client.utils.warn(
         client,
         message.author,

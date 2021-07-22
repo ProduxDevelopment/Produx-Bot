@@ -23,25 +23,27 @@ module.exports = {
           message.reply("Something went wrong!");
         }
       });
-      client.channels.cache.get(process.env.LOGS_CHANNEL_ID).send({
-        embed: {
-          color: "FFD700",
-          timestamp: new Date(),
-          title: "🔓 Channel(s) unlocked",
-          fields: [
-            {
-              name: "Channel(s):",
-              value: message.mentions.channels
-                .map((channel) => `<#${channel.id}>`)
-                .join("\n"),
-            },
-            {
-              name: "Moderator:",
-              value: `${message.author} (${message.author.id})`,
-            },
-          ],
-        },
-      });
+      message.guild.channels.cache
+        .find((c) => c.name === "logs")
+        .send({
+          embed: {
+            color: "FFD700",
+            timestamp: new Date(),
+            title: "🔓 Channel(s) unlocked",
+            fields: [
+              {
+                name: "Channel(s):",
+                value: message.mentions.channels
+                  .map((channel) => `<#${channel.id}>`)
+                  .join("\n"),
+              },
+              {
+                name: "Moderator:",
+                value: `${message.author} (${message.author.id})`,
+              },
+            ],
+          },
+        });
     }
     if (!message.mentions.channels.first()) {
       if (!message.channel.name.startsWith("🔒"))
@@ -52,23 +54,25 @@ module.exports = {
           SEND_MESSAGES: true,
         });
         message.reply(`<#${message.channel.id}> has been unlocked!`);
-        client.channels.cache.get(process.env.LOGS_CHANNEL_ID).send({
-          embed: {
-            color: "FFD700",
-            timestamp: new Date(),
-            title: "🔓 Channel unlocked",
-            fields: [
-              {
-                name: "Channel:",
-                value: message.channel,
-              },
-              {
-                name: "Moderator:",
-                value: `${message.author} (${message.author.id})`,
-              },
-            ],
-          },
-        });
+        message.guild.channels.cache
+          .find((c) => c.name === "logs")
+          .send({
+            embed: {
+              color: "FFD700",
+              timestamp: new Date(),
+              title: "🔓 Channel unlocked",
+              fields: [
+                {
+                  name: "Channel:",
+                  value: message.channel,
+                },
+                {
+                  name: "Moderator:",
+                  value: `${message.author} (${message.author.id})`,
+                },
+              ],
+            },
+          });
       } catch (err) {
         console.error(err);
         message.reply("Something went wrong!");

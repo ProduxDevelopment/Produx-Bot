@@ -12,31 +12,33 @@ exports.warn = async (client, user, reason, mod) => {
     if (err) console.error(err);
   });
 
-  client.channels.cache.get(process.env.LOGS_CHANNEL_ID).send({
-    embed: {
-      color: "FFFF00",
-      timestamp: new Date(),
-      title: "New Warning",
-      fields: [
-        {
-          name: "Warnings:",
-          value: db[user.id].warnings.length,
-        },
-        {
-          name: "User:",
-          value: `${user} (${user.id})`,
-        },
-        {
-          name: "Reason:",
-          value: reason || "None",
-        },
-        {
-          name: "Moderator:",
-          value: `${mod} (${mod.id})`,
-        },
-      ],
-    },
-  });
+  message.guild.channels.cache
+    .find((c) => c.name === "logs")
+    .send({
+      embed: {
+        color: "FFFF00",
+        timestamp: new Date(),
+        title: "New Warning",
+        fields: [
+          {
+            name: "Warnings:",
+            value: db[user.id].warnings.length,
+          },
+          {
+            name: "User:",
+            value: `${user} (${user.id})`,
+          },
+          {
+            name: "Reason:",
+            value: reason || "None",
+          },
+          {
+            name: "Moderator:",
+            value: `${mod} (${mod.id})`,
+          },
+        ],
+      },
+    });
 
   user.send({
     embed: {

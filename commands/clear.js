@@ -33,26 +33,28 @@ module.exports = {
             .setTitle(`Deleted ${messages.size} messages`)
             .setColor("#0000FF")
         );
-        client.channels.cache.get(process.env.LOGS_CHANNEL_ID).send({
-          embed: {
-            timestamp: new Date(),
-            title: "Messages Bulk Deleted",
-            fields: [
-              {
-                name: "Amount:",
-                value: messages.size,
-              },
-              {
-                name: "Channel:",
-                value: message.channel,
-              },
-              {
-                name: "Moderator:",
-                value: `${message.author} (${message.author.id})`,
-              },
-            ],
-          },
-        });
+        message.guild.channels.cache
+          .find((c) => c.name === "logs")
+          .send({
+            embed: {
+              timestamp: new Date(),
+              title: "Messages Bulk Deleted",
+              fields: [
+                {
+                  name: "Amount:",
+                  value: messages.size,
+                },
+                {
+                  name: "Channel:",
+                  value: message.channel,
+                },
+                {
+                  name: "Moderator:",
+                  value: `${message.author} (${message.author.id})`,
+                },
+              ],
+            },
+          });
       })
       .catch((err) => {
         client.logger.error(err);
