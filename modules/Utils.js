@@ -12,7 +12,7 @@ exports.warn = async (client, user, reason, mod) => {
     if (err) console.error(err);
   });
 
-  message.guild.channels.cache
+  client.channels.cache
     .find((c) => c.name === "logs")
     .send({
       embed: {
