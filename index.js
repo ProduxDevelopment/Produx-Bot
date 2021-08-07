@@ -1,11 +1,11 @@
 const fs = require("fs");
-const Discord = require("discord.js");
+const { Client, Collection, Intents } = require('discord.js');
 require("dotenv").config();
 
-const client = new Discord.Client();
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 client.logger = require("./modules/Logger");
 client.utils = require("./modules/Utils");
-client.commands = new Discord.Collection();
+client.commands = new Collection();
 
 const commandFiles = fs
   .readdirSync("./commands")
@@ -29,5 +29,17 @@ for (const file of eventFiles) {
   const event = require(`./events/${file}`);
   client.on(eventName, event.bind(null, client));
 }
+
+client.on('interactionCreate', async interaction => {
+  console.log(interaction)
+	if (!interaction.isCommand()) return;
+
+	if (interaction.commandName === 'ping') {
+		await interaction.reply('Pong.');
+	} else if (interaction.commandName === 'beep') {
+		await interaction.reply('Boop!');
+	}
+	// ...
+});
 
 client.login(process.env.TOKEN);
