@@ -4,16 +4,14 @@ module.exports = {
   description: "Creates a new ticket.",
   aliases: ["new"],
   usage: "[reason]",
-  async execute(client, message, args, prefix) {
-    if (
-      message.guild.channels.cache.find(
-        (channel) => channel.name === `ticket-${message.author.id}`
-      )
-    ) {
-      return message.reply(
-        "you already have a ticket, please close your existing ticket first before opening a new one!"
-      );
-    }
+  options: [
+    {
+      name: "reason",
+      description: "Ticket Creation Reason",
+      type: "STRING",
+    },
+  ],
+  async execute(interaction) {
     const db = JSON.parse(fs.readFileSync("db.json", "utf-8"));
     if (!db.tickets) db.tickets = { count: 0 };
 
@@ -35,14 +33,14 @@ module.exports = {
     } else {
       counterName = `${counter}`;
     }
-    const role = await message.guild.roles.cache.find(
+    const role = await interaction.guild.roles.cache.find(
       (role) => role.name === "Team"
     );
-    message.guild.channels
+    interaction.guild.channels
       .create(`ticket-${counterName}`, {
         permissionOverwrites: [
           {
-            id: message.author.id,
+            id: interaction.user.id,
             allow: ["SEND_MESSAGES", "VIEW_CHANNEL"],
           },
           {
@@ -50,70 +48,80 @@ module.exports = {
             allow: ["SEND_MESSAGES", "VIEW_CHANNEL"],
           },
           {
-            id: client.user.id,
+            id: interaction.client.user.id,
             allow: ["SEND_MESSAGES", "VIEW_CHANNEL"],
           },
           {
-            id: message.guild.roles.everyone,
+            id: interaction.guild.roles.everyone,
             deny: ["VIEW_CHANNEL"],
           },
         ],
         type: "text",
-        parent: await message.guild.channels.cache.find(
+        parent: await interaction.guild.channels.cache.find(
           (cat) => cat.name === "tickets"
         ),
-        topic: `User: ${message.author.id} \nReason: ${args.join(" ")}`,
+        topic: `User: ${interaction.user.id} \nReason: ${
+          interaction.options.getString("reason") || "None"
+        }`,
       })
       .then(async (channel) => {
-        message.channel.send({
-          embed: {
-            color: "6495ED",
-            timestamp: new Date(),
-            title: "🎫 New Ticket",
-            description: `Your ticket has been created in ${channel}!\n**Reason:** ${
-              args.join(" ") || "None"
-            }`,
-          },
-        });
-        channel.send(`<@&${role.id}>`);
-        channel.send(`<@${message.author.id}>`);
-        channel.send({
-          embed: {
-            thumbnail: {
-              url: client.user.displayAvatarURL({ dynamic: true }),
-            },
-            color: "6495ED",
-            timestamp: new Date(),
-            title: `🎫 Ticket-${counterName}`,
-            description: `Hello ${
-              message.author
-            }, Welcome to your ticket!\nPlease be patient and we will be with you shortly. If you would like to close this ticket please run \`${
-              process.env.PREFIX
-            }close\`\n\n**Reason:** \`${args.join(" ") || "None"}\``,
-          },
-        });
-        message.guild.channels.cache
-          .find((c) => c.name === `logs`)
-          .send({
-            embed: {
+        interaction.reply({
+          embeds: [
+            {
               color: "6495ED",
               timestamp: new Date(),
               title: "🎫 New Ticket",
-              fields: [
-                {
-                  name: "User:",
-                  value: `${message.author} (${message.author.id})`,
-                },
-                {
-                  name: "Channel:",
-                  value: `${channel} (${channel.id})`,
-                },
-                {
-                  name: "Reason:",
-                  value: args.join(" ") || "None",
-                },
-              ],
+              description: `Your ticket has been created in ${channel}!\n**Reason:** ${
+                interaction.options.getString("reason") || "None"
+              }`,
             },
+          ],
+        });
+        channel.send(`<@&${role.id}>`);
+        channel.send(`<@${interaction.user.id}>`);
+        channel.send({
+          embeds: [
+            {
+              thumbnail: {
+                url: interaction.client.user.displayAvatarURL({
+                  dynamic: true,
+                }),
+              },
+              color: "6495ED",
+              timestamp: new Date(),
+              title: `🎫 Ticket-${counterName}`,
+              description: `Hello ${
+                interaction.user
+              }, Welcome to your ticket!\nPlease be patient and we will be with you shortly. If you would like to close this ticket please run \`/close\`\n\n**Reason:** \`${
+                interaction.options.getString("reason") || "None"
+              }\``,
+            },
+          ],
+        });
+        interaction.guild.channels.cache
+          .find((c) => c.name === `logs`)
+          .send({
+            embeds: [
+              {
+                color: "6495ED",
+                timestamp: new Date(),
+                title: "🎫 New Ticket",
+                fields: [
+                  {
+                    name: "User:",
+                    value: `${interaction.user} (${interaction.user.id})`,
+                  },
+                  {
+                    name: "Channel:",
+                    value: `${channel} (${channel.id})`,
+                  },
+                  {
+                    name: "Reason:",
+                    value: interaction.options.getString("reason") || "None",
+                  },
+                ],
+              },
+            ],
           });
       });
   },
