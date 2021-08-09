@@ -1,81 +1,89 @@
 module.exports = {
   name: "unlock",
-  description: "Unlock Channel(s) mentioned.",
+  description: "Unlock Channel mentioned.",
   permissions: ["Team"],
   usage: "[Channels]",
-  async execute(client, message, args) {
-    const role = message.guild.roles.cache.find(
+  options: [
+    {
+      name: "channel",
+      description: "Select a channel to unlock",
+      type: "CHANNEL",
+    },
+  ],
+  async execute(interaction) {
+    const role = interaction.guild.roles.cache.find(
       (role) => role.name === "Member"
     );
-    if (!role) return message.reply("I can't find the Member role.");
-    if (message.mentions.channels.first()) {
-      message.mentions.channels.forEach(async (channel) => {
-        if (!channel.name.startsWith("🔒"))
-          return message.reply(`<#${channel.id}> is not locked!`);
-        await channel.setName(channel.name.substring(1));
-        try {
-          await channel.updateOverwrite(role, {
-            SEND_MESSAGES: true,
-          });
-          message.reply(`<#${channel.id}> has been unlocked!`);
-        } catch (err) {
-          console.error(err);
-          message.reply("Something went wrong!");
-        }
-      });
-      message.guild.channels.cache
-        .find((c) => c.name === "logs")
-        .send({
-          embed: {
-            color: "FFD700",
-            timestamp: new Date(),
-            title: "🔓 Channel(s) unlocked",
-            fields: [
-              {
-                name: "Channel(s):",
-                value: message.mentions.channels
-                  .map((channel) => `<#${channel.id}>`)
-                  .join("\n"),
-              },
-              {
-                name: "Moderator:",
-                value: `${message.author} (${message.author.id})`,
-              },
-            ],
-          },
-        });
-    }
-    if (!message.mentions.channels.first()) {
-      if (!message.channel.name.startsWith("🔒"))
-        return message.reply(`<#${message.channel.id}> is not locked!`);
-      await message.channel.setName(message.channel.name.substring(1));
+    if (!role) return interaction.reply("I can't find the Member role.");
+    const channel = interaction.options.getChannel("channel");
+    if (channel) {
+      if (!channel.name.startsWith("🔒"))
+        return interaction.reply(`<#${channel.id}> is not locked!`);
+      await channel.setName(channel.name.substring(1));
       try {
-        await message.channel.updateOverwrite(role, {
+        await channel.permissionOverwrites.edit(role, {
           SEND_MESSAGES: true,
         });
-        message.reply(`<#${message.channel.id}> has been unlocked!`);
-        message.guild.channels.cache
-          .find((c) => c.name === "logs")
-          .send({
-            embed: {
+        interaction.reply(`<#${channel.id}> has been unlocked!`);
+      } catch (err) {
+        console.error(err);
+        interaction.reply("Something went wrong!");
+      }
+      interaction.guild.channels.cache
+        .find((c) => c.name === "logs")
+        .send({
+          embeds: [
+            {
               color: "FFD700",
               timestamp: new Date(),
               title: "🔓 Channel unlocked",
               fields: [
                 {
                   name: "Channel:",
-                  value: message.channel,
+                  value: `<#${channel.id}>`,
                 },
                 {
                   name: "Moderator:",
-                  value: `${message.author} (${message.author.id})`,
+                  value: `${interaction.user} (${interaction.user.id})`,
                 },
               ],
             },
+          ],
+        });
+    }
+    if (!channel) {
+      if (!interaction.channel.name.startsWith("🔒"))
+        return interaction.reply(`<#${interaction.channel.id}> is not locked!`);
+      await interaction.channel.setName(interaction.channel.name.substring(1));
+      try {
+        await interaction.channel.permissionOverwrites.edit(role, {
+          SEND_MESSAGES: true,
+        });
+        interaction.reply(`<#${interaction.channel.id}> has been unlocked!`);
+        interaction.guild.channels.cache
+          .find((c) => c.name === "logs")
+          .send({
+            embeds: [
+              {
+                color: "FFD700",
+                timestamp: new Date(),
+                title: "🔓 Channel unlocked",
+                fields: [
+                  {
+                    name: "Channel:",
+                    value: `<#${interaction.channel.id}>`,
+                  },
+                  {
+                    name: "Moderator:",
+                    value: `${interaction.user} (${interaction.user.id})`,
+                  },
+                ],
+              },
+            ],
           });
       } catch (err) {
         console.error(err);
-        message.reply("Something went wrong!");
+        interaction.reply("Something went wrong!");
       }
     }
   },
