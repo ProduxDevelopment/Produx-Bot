@@ -1,8 +1,7 @@
 module.exports = {
   name: "lock",
   description: "Lock Channel mentioned.",
-  permissions: ["Team"],
-  usage: "[Channels]",
+  defaultPermission: false,
   options: [
     {
       name: "channel",

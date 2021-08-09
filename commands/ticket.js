@@ -2,7 +2,6 @@ const fs = require("fs");
 module.exports = {
   name: "ticket",
   description: "Creates a new ticket.",
-  usage: "[reason]",
   options: [
     {
       name: "reason",

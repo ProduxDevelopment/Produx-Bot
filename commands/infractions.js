@@ -1,9 +1,8 @@
 const fs = require("fs");
 module.exports = {
   name: "infractions",
-  permissions: ["Team"],
-  usage: "<@user/user id>",
   description: "View a user's infractions",
+  defaultPermission: false,
   options: [
     {
       name: "target",

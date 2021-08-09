@@ -1,8 +1,7 @@
 module.exports = {
   name: "clear",
   description: "Delete messages",
-  permissions: ["Team"],
-  usage: "[amount]",
+  defaultPermission: false,
   options: [
     {
       name: "num",

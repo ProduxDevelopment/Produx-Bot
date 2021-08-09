@@ -1,8 +1,8 @@
 const Utils = require("../modules/Utils");
 module.exports = {
   name: "warn",
-  permissions: ["Team"],
   description: "Warn a user.",
+  defaultPermission: false,
   options: [
     {
       name: "target",

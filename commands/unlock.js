@@ -1,8 +1,7 @@
 module.exports = {
   name: "unlock",
   description: "Unlock Channel mentioned.",
-  permissions: ["Team"],
-  usage: "[Channels]",
+  defaultPermission: false,
   options: [
     {
       name: "channel",

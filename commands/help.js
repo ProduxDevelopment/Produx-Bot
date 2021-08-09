@@ -1,7 +1,6 @@
 module.exports = {
   name: "help",
   description: "List all of my commands or info about a specific command.",
-  usage: "[command name]",
   execute(interaction) {
     const data = [];
     const { commands } = interaction.client;

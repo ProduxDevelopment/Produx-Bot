@@ -8,7 +8,6 @@ String.prototype.toProperCase = function () {
 module.exports = {
   name: "close",
   description: "Closes the ticket.",
-  usage: "",
   options: [
     {
       name: "reason",
