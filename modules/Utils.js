@@ -15,46 +15,50 @@ exports.warn = async (client, user, reason, mod) => {
   client.channels.cache
     .find((c) => c.name === "logs")
     .send({
-      embed: {
+      embeds: [
+        {
+          color: "FFFF00",
+          timestamp: new Date(),
+          title: "New Warning",
+          fields: [
+            {
+              name: "Warnings:",
+              value: db[user.id].warnings.length.toString(),
+            },
+            {
+              name: "User:",
+              value: `${user} (${user.id})`,
+            },
+            {
+              name: "Reason:",
+              value: reason || "None",
+            },
+            {
+              name: "Moderator:",
+              value: `${mod} (${mod.id})`,
+            },
+          ],
+        },
+      ],
+    });
+
+  user.send({
+    embeds: [
+      {
         color: "FFFF00",
         timestamp: new Date(),
-        title: "New Warning",
+        title: "You have been been Warned!",
         fields: [
           {
             name: "Warnings:",
-            value: db[user.id].warnings.length,
-          },
-          {
-            name: "User:",
-            value: `${user} (${user.id})`,
+            value: db[user.id].warnings.length.toString(),
           },
           {
             name: "Reason:",
             value: reason || "None",
           },
-          {
-            name: "Moderator:",
-            value: `${mod} (${mod.id})`,
-          },
         ],
       },
-    });
-
-  user.send({
-    embed: {
-      color: "FFFF00",
-      timestamp: new Date(),
-      title: "You have been been Warned!",
-      fields: [
-        {
-          name: "Warnings:",
-          value: db[user.id].warnings.length,
-        },
-        {
-          name: "Reason:",
-          value: reason || "None",
-        },
-      ],
-    },
+    ],
   });
 };
