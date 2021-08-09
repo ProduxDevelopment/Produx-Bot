@@ -1,71 +1,64 @@
-const Discord = require("discord.js");
 module.exports = {
   name: "clear",
   description: "Delete messages",
-  args: true,
-  aliases: ["purge", "prune"],
-  permissions: ["Team"],
-  usage: "[amount]",
-  execute(client, message, args) {
-    const amount = parseInt(args[0]) + 1;
+  defaultPermission: false,
+  options: [
+    {
+      name: "num",
+      description: "Enter a number",
+      type: "NUMBER",
+      required: true,
+    },
+  ],
+  async execute(interaction) {
+    const amount = await interaction.options.getNumber("num");
 
-    if (isNaN(amount)) {
-      return message.channel.send(
-        new Discord.MessageEmbed()
-          .setTitle("Error!")
-          .setDescription("Thats not a valid number.")
-          .setColor("#FF0000")
-      );
-    } else if (amount <= 1 || amount > 100) {
-      return message.channel.send(
-        new Discord.MessageEmbed()
-          .setTitle("Error!")
-          .setDescription("you need to input a number between 1 and 99.")
-          .setColor("#FF0000")
-      );
+    if (amount <= 1 || amount > 100) {
+      return interaction.reply({
+        content: "You need to input a number between 1 and 99.",
+        ephemeral: true,
+      });
     }
 
-    message.channel
+    interaction.channel
       .bulkDelete(amount, true)
       .then((messages) => {
-        message.channel.send(
-          new Discord.MessageEmbed()
-            .setTitle(`Deleted ${messages.size} messages`)
-            .setColor("#0000FF")
-        );
-        message.guild.channels.cache
+        interaction.reply({
+          content: `Deleted ${messages.size} messages`,
+          ephemeral: true,
+        });
+        interaction.guild.channels.cache
           .find((c) => c.name === "logs")
           .send({
-            embed: {
-              timestamp: new Date(),
-              title: "Messages Bulk Deleted",
-              fields: [
-                {
-                  name: "Amount:",
-                  value: messages.size,
-                },
-                {
-                  name: "Channel:",
-                  value: message.channel,
-                },
-                {
-                  name: "Moderator:",
-                  value: `${message.author} (${message.author.id})`,
-                },
-              ],
-            },
+            embeds: [
+              {
+                timestamp: new Date(),
+                title: "Messages Bulk Deleted",
+                fields: [
+                  {
+                    name: "Amount:",
+                    value: messages.size.toString(),
+                  },
+                  {
+                    name: "Channel:",
+                    value: `<#${interaction.channel.id}>`,
+                  },
+                  {
+                    name: "Moderator:",
+                    value: `${interaction.user} (${interaction.user.id})`,
+                  },
+                ],
+              },
+            ],
           });
       })
       .catch((err) => {
-        client.logger.error(err);
-        message.channel.send(
-          new Discord.MessageEmbed()
-            .setTitle("Error!")
-            .setDescription(
-              "There was an error trying to clear messages in this channel!"
-            )
-            .setColor("#FF0000")
-        );
+        console.error(err);
+        interaction.reply({
+          content:
+            "There was an error trying to clear messages in this channel!",
+          ephemeral: true,
+        });
       });
   },
 };

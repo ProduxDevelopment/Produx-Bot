@@ -1,8 +1,7 @@
 const chalk = require("chalk");
-const moment = require("moment");
 
 exports.log = (content, type = "log") => {
-  const timestamp = `[${moment().format("YYYY-MM-DD HH:mm:ss")}]:`;
+  const timestamp = `[${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}]:`;
   switch (type) {
     case "log": {
       return console.log(
