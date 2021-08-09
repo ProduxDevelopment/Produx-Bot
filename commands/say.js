@@ -1,6 +1,5 @@
 module.exports = {
   name: "say",
-  args: true,
   permissions: ["Team"],
   usage: "<normal/embed> <your text/embed code>",
   description: "Send a embed or normal message as the bot.",

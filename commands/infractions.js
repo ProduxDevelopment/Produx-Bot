@@ -1,29 +1,29 @@
 const fs = require("fs");
 module.exports = {
   name: "infractions",
-  args: true,
   permissions: ["Team"],
   usage: "<@user/user id>",
   description: "View a user's infractions",
-  async execute(client, message, args) {
-    let user =
-      message.mentions.users.first() || (await client.users.cache.get(args[0]));
-    if (!user)
-      return message.reply(
-        "Invalid Usage\nProper Usage: `.infractions <@user/user id>`"
-      );
+  options: [
+    {
+      name: "target",
+      description: "User to check infractions of",
+      type: "USER",
+      required: true,
+    },
+  ],
+  async execute(interaction) {
     const db = JSON.parse(fs.readFileSync("db.json", "utf-8"));
+    const user = await interaction.options.getUser("target");
     if (!db[user.id])
-      return message.reply("This user has no past infractions.");
+      return interaction.reply("This user has no past infractions.");
 
-    message.channel.send({
-      embed: {
-        title: `${user.tag}'s Infractions:`,
-      },
-    });
-    if (db[user.id].warnings) {
-      message.channel.send({
-        embed: {
+    interaction.reply({
+      embeds: [
+        {
+          title: `${user.tag}'s Infractions:`,
+        },
+        {
           color: "FFFF00",
           title: `${db[user.id].warnings.length} Warnings:`,
           description: db[user.id].warnings
@@ -33,7 +33,7 @@ module.exports = {
             )
             .join("\n\n"),
         },
-      });
-    }
+      ],
+    });
   },
 };

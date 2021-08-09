@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const hastebin = require("hastebin-gen");
 String.prototype.toProperCase = function () {
   return this.replace(/\w\S*/g, function (txt) {
@@ -9,7 +8,6 @@ String.prototype.toProperCase = function () {
 module.exports = {
   name: "close",
   description: "Closes the ticket.",
-  aliases: [],
   usage: "",
   options: [
     {
