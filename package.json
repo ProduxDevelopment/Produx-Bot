@@ -1,7 +1,7 @@
 {
-  "name": "carty-bot",
+  "name": "produx-bot",
   "version": "1.0.0",
-  "description": "The Official Discord Bot for the Vendor Support Discord Server.",
+  "description": "The Official Discord Bot for the Produx Support Discord Server.",
   "main": "index.js",
   "scripts": {
     "start": "npm i && node index.js",
@@ -9,23 +9,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VendorDev/Vendor-Bot.git"
+    "url": "git+https://github.com/ProduxDevelopment/Produx.git"
   },
   "keywords": [
-    "carty",
+    "produx",
     "discord",
     "bot"
   ],
-  "author": "Carty Team",
+  "author": "Produx Team",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/VendorDev/Vendor-Bot/issues"
+    "url": "https://github.com/ProduxDevelopment/Produxissues"
   },
-  "homepage": "https://github.com/VendorDev/Vendor-Bot#readme",
+  "homepage": "https://github.com/ProduxDevelopment/Produx#readme",
   "dependencies": {
     "bad-words": "^3.0.4",
     "chalk": "^4.1.2",
-    "discord.js": "^13.0.1",
+    "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "hastebin-gen": "^2.0.5"
   }
